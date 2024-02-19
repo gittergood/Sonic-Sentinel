@@ -82,8 +82,9 @@ void get_camera_data(){
 
     Serial.println("Person Score: " + String(person_score));
 
-    // Add logic to take action based on person detection
-    // For example, send a notification, turn on a light, etc.
+    if(person_score){
+      // Arduino code to beep
+    }
 
     esp_camera_fb_return(fb);
   }
