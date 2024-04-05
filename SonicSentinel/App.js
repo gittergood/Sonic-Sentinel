@@ -5,7 +5,6 @@ import paths from "./Screens/paths";
 import { NavigationContainer } from '@react-navigation/native';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Overlay, Button, FAB, Icon, Divider, ButtonGroup, Input  } from 'react-native-elements';
 
 const Tab = createBottomTabNavigator();
 
