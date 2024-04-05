@@ -1,19 +1,33 @@
 import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { getFirestore, doc, setDoc, collection, addDoc } from '@firebase/firestore';
 import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
 
 
 export default function add() {
-    const [destination, setDestination] = useState('');
-    const [node1, setNode1] = useState('');
-    const [node2, setNode2] = useState('');
-    const [node3, setNode3] = useState('');
-    const [node4, setNode4] = useState('');
 
-    return (
-        <View style={styles.container}>
+  const [node1, setNode1] = useState('');
+  const [node2, setNode2] = useState('');
+  const [node3, setNode3] = useState('');
+  const [node4, setNode4] = useState('');
+  const [destination, setDestination] = useState('');
+
+  const uploadDataToFirestore = async (collectionName, docId, data) => {
+    try {
+      const docRef = doc(db, collectionName, docId);
+      await setDoc(docRef, data);
+      // await addDoc(collection(db, collectionName), data);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+    console.log("done");
+  };
+
+  return (
+      <View style={styles.container}>
         <LinearGradient
             // Background Linear Gradient
             colors={['rgba(5,0,0,0.8)', 'transparent']}
@@ -33,13 +47,12 @@ export default function add() {
 
         <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} > 
             <Button title="Submit" onPress={() => { showMessage({message: "Notice", type: "success", floating:true,
-            duration: 3000,   description: "Submitted"}); }} />
+            duration: 3000,   description: "Submitted"}); uploadDataToFirestore("dennis", destination, node1);}} />
         </LinearGradient>
-
+        <StatusBar style="light" />
         <FlashMessage position="top" />
-        <StatusBar style="auto" />
-        </View>
-    );
+      </View>
+  );
 };
 
 const styles = StyleSheet.create({
