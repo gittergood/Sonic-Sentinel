@@ -1,47 +1,65 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
-import { getFirestore, doc, setDoc, collection, addDoc } from '@firebase/firestore';
-import { Overlay, Button, FAB, Icon, Divider, ButtonGroup } from 'react-native-elements';
-import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
 import { useState } from 'react';
+import { StatusBar } from 'expo-status-bar';
+import add from "./Screens/add";
+import paths from "./Screens/paths";
+import { NavigationContainer } from '@react-navigation/native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Overlay, Button, FAB, Icon, Divider, ButtonGroup, Input  } from 'react-native-elements';
+
+const Tab = createBottomTabNavigator();
 
 export default function App() {
-  const [destination, setDestination] = useState('');
-  const [node1, setNode1] = useState(0);
-  const [node2, setNode2] = useState(0);
-  const [node3, setNode3] = useState(0);
-  const [node4, setNode4] = useState(0);
-
-  return (
-    <View style={styles.container}>
-      <Text>Insert Path Information</Text>
-
-      <TextInput onChangeText={setDestination}
-        value={destination}/>
-
-      <TextInput onChangeText={setNode1}
-        value={Node1}/>
-
-      <TextInput onChangeText={setNode2}
-        value={node2}/>
-
-      <TextInput onChangeText={setNode3}
-        value={node3}/>
-
-      <TextInput onChangeText={setNode4}
-        value={node4}/>
-
-      <Button title="Submit"></Button>
-      <StatusBar style="auto" />
-    </View>
-  );
+  <NavigationContainer>
+    <Tab.Navigator screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+            if (route.name === 'add') {
+              iconName = focused
+                ? 'home' : 'home-outline';
+            } else if (route.name === 'paths') {
+              iconName = focused ? 'menu' : 'menu-outline';
+            }
+                        // You can return any component that you like here!
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: 'red',
+          tabBarInactiveTintColor: 'gray',
+        })}>
+        <Tab.Screen name="add" component={add} />
+        <Tab.Screen name="paths" component={paths} />
+      </Tab.Navigator>
+  </NavigationContainer>
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'white',
   },
+  background: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: 300,
+  },
+  button: {
+    padding: 15,
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  text: {
+    backgroundColor: 'transparent',
+    fontSize: 15,
+    color: '#000',
+  },
+  title: {
+    color: '#000',
+    // paddingTop:'10px',
+    paddingBottom:'20px',
+    fontSize: 20
+  }
 });
