@@ -8,10 +8,16 @@ import FlashMessage, { showMessage, hideMessage } from "react-native-flash-messa
 
 export default function add() {
 
-  const [node1, setNode1] = useState('');
-  const [node2, setNode2] = useState('');
-  const [node3, setNode3] = useState('');
-  const [node4, setNode4] = useState('');
+  const [node1, setNode1] = useState();
+  const [node2, setNode2] = useState();
+  const [node3, setNode3] = useState();
+  const [node4, setNode4] = useState();
+  const [node5, setNode5] = useState();
+  const [node6, setNode6] = useState();
+  const [node7, setNode7] = useState();
+  const [node8, setNode8] = useState();
+  const [node9, setNode9] = useState();
+  const [node10, setNode10] = useState();
   const [destination, setDestination] = useState('');
 
   const uploadDataToFirestore = async (collectionName, docId, data) => {
@@ -20,10 +26,13 @@ export default function add() {
       await setDoc(docRef, data);
       // await addDoc(collection(db, collectionName), data);
       console.log("Document written with ID: ", docRef.id);
+      showMessage({message: "Notice", type: "success", floating:true,
+            duration: 3000,   description: "Data successfully uploaded"});
     } catch (e) {
       console.error("Error adding document: ", e);
+      showMessage({message: "Notice", type: "danger", floating:true,
+            duration: 3000,   description: "Data failed to upload"});
     }
-    console.log("done");
   };
 
   return (
@@ -45,9 +54,20 @@ export default function add() {
 
         <Input onChangeText={setNode4} placeholder='4' style={styles.text} value={node4}/>
 
+        <Input onChangeText={setNode5} placeholder='5' style={styles.text} value={node5}/>
+
+        <Input onChangeText={setNode6} placeholder='6' style={styles.text} value={node6}/>
+
+        <Input onChangeText={setNode7} placeholder='7' style={styles.text} value={node7}/>
+
+        <Input onChangeText={setNode8} placeholder='8' style={styles.text} value={node8}/>
+
+        <Input onChangeText={setNode9} placeholder='7' style={styles.text} value={node9}/>
+
+        <Input onChangeText={setNode10} placeholder='8' style={styles.text} value={node10}/>
+
         <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} > 
-            <Button title="Submit" onPress={() => { showMessage({message: "Notice", type: "success", floating:true,
-            duration: 3000,   description: "Submitted"}); uploadDataToFirestore("dennis", destination, node1);}} />
+            <Button title="Submit" onPress={() => {  uploadDataToFirestore("dennis", destination, node1);}} />
         </LinearGradient>
         <StatusBar style="light" />
         <FlashMessage position="top" />
