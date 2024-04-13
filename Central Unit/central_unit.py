@@ -1,8 +1,16 @@
-import socket, threading
+import socket, threading, firebase_admin
+from firebase_admin import credentials
+from firebase_admin import db  # For Realtime Database
+from firebase_admin import firestore  # For Firestore
 
 # Initial socket setup
 serv = socket.socket()
 host = socket.gethostbyname(socket.gethostname())               # Get IP address. Since this will be a RPi, the device will already be connected to the the network.
+cred = credentials.Certificate('')                              # Will be replaced by the file on the raspberry pi
+firebase_admin.initialize_app(cred, {
+  'databaseURL': 'https://console.firebase.google.com/u/0/project/capstone-11656/overview'  # Only for Realtime Database
+})
+ref = db.reference('')
 port = 5000
 
 serv.bind((host, port))
@@ -12,6 +20,33 @@ serv.listen(10)                                            # Allow 10 connection
 number_of_modules = 10                                     # This number depends on the house and the number of modules that are implemented
 modules = {}     
 path = {} 
+
+# Read path info from the firebase
+def get_paths(path_num):
+    paths = []
+    firestore_db = firestore.client()
+    # Document reference
+    doc_ref = firestore_db.collection('paths').document('path'+str(path_num))
+
+    # Get the document
+    doc = doc_ref.get()
+    if doc.exists:
+        # Access fields
+        paths.insert(0, doc.to_dict().get('1'))
+        paths.insert(1, doc.to_dict().get('2'))
+        paths.insert(2, doc.to_dict().get('3'))
+        paths.insert(3, doc.to_dict().get('4'))
+        paths.insert(4, doc.to_dict().get('5'))
+        paths.insert(5, doc.to_dict().get('6'))
+        paths.insert(6, doc.to_dict().get('7'))
+        paths.insert(7, doc.to_dict().get('8'))
+        paths.insert(8, doc.to_dict().get('9'))
+        paths.insert(9, doc.to_dict().get('10'))
+
+    else:
+        print('No such document!')
+
+    return paths
 
 # When a module connects
 def connect_module(client_socket):
@@ -54,6 +89,13 @@ def handle_module(client_socket):
 
 # Wait for one of the modules to send send location 
 if __name__ == "main":
+    firestore_db = firestore.client()
+    # Document reference
+    doc_ref = firestore_db.collection('paths')
+    doc = doc_ref.get()
+    for i in range(0, doc.to_dict().get('total')):
+        path[i] = get_paths(i)
+
     while True:
         client, addr = serv.accept()
         client_handler = threading.Thread(target=connect_module, args=(client,))
